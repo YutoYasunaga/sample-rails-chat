@@ -9,35 +9,3 @@
       = button_tag type: :submit, class: 'btn min-w-[25%]' do
         i class="fa-solid fa-paper-plane"
         span.ml-1 Send
-
-javascript:
-    const usernameField = document.getElementById('message_username');
-    const bodyField = document.getElementById('message_body');
-    let typingTimer; // Timer identifier
-    let isTyping = false; // Track typing status
-    const doneTypingInterval = 3000; // Time in ms (3 seconds)
-
-    bodyField.addEventListener('input', () => {
-        console.warn(isTyping)
-        if (!isTyping) {
-            console.log('Active: true');
-            const currentUserId = document.body.dataset.userId
-            App.typingChannel.typing({active: true, username: usernameField.value, user_id: currentUserId });
-            isTyping = true;
-        }
-
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(doneTyping, doneTypingInterval);
-    });
-
-    function doneTyping() {
-        console.log('Active: false');
-        App.typingChannel.typing({active: false});
-        isTyping = false;
-    }
-
-    window.addEventListener('beforeunload', () => {
-        if (isTyping) {
-            App.typingChannel.typing({active: false})
-        }
-    });
