@@ -1,0 +1,8 @@
+div class="even:bg-slate-50 p-2 break-all flex space-x-1"
+  div class="w-16"
+    = image_tag message.avatar, class: 'rounded-full'
+
+  div class="w-full"
+    span class="font-bold mr-1 text-stone-600" #{message.username}:
+    span = message.body.gsub("\n", "<br/>").html_safe
+    div class="text-sm italic text-gray-400 text-right" #{time_ago_in_words(message.updated_at)} ago

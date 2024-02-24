@@ -1,0 +1,43 @@
+= form_with(model: message, data: {controller: 'messages', action: 'turbo:submit-end->messages#resetForm'} ) do |form|
+  div class="flex flex-col space-y-1"
+    div
+      = form.text_area :body, placeholder: 'Type a message... (max 2000 characters)', class: 'w-full'
+
+    div class="flex space-x-2 items-center"
+      = form.label :username, class: 'font-bold text-stone-500'
+      = form.text_field :username, placeholder: 'Yuto', class: 'w-full'
+      = button_tag type: :submit, class: 'btn min-w-[25%]' do
+        i class="fa-solid fa-paper-plane"
+        span.ml-1 Send
+
+javascript:
+    const usernameField = document.getElementById('message_username');
+    const bodyField = document.getElementById('message_body');
+    let typingTimer; // Timer identifier
+    let isTyping = false; // Track typing status
+    const doneTypingInterval = 3000; // Time in ms (3 seconds)
+
+    bodyField.addEventListener('input', () => {
+        console.warn(isTyping)
+        if (!isTyping) {
+            console.log('Active: true');
+            const currentUserId = document.body.dataset.userId
+            App.typingChannel.typing({active: true, username: usernameField.value, user_id: currentUserId });
+            isTyping = true;
+        }
+
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(doneTyping, doneTypingInterval);
+    });
+
+    function doneTyping() {
+        console.log('Active: false');
+        App.typingChannel.typing({active: false});
+        isTyping = false;
+    }
+
+    window.addEventListener('beforeunload', () => {
+        if (isTyping) {
+            App.typingChannel.typing({active: false})
+        }
+    });
