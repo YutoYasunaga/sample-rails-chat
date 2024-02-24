@@ -2,10 +2,6 @@ import consumer from "./consumer"
 
 consumer.subscriptions.create("MessageChannel", {
   connected() {
-    // Called when the subscription is ready for use on the server
-    document.addEventListener('turbo:load', () => {
-      this.scrollToBottom()
-    })
   },
 
   disconnected() {
@@ -13,13 +9,17 @@ consumer.subscriptions.create("MessageChannel", {
   },
 
   received() {
-    this.scrollToBottom()
+    scrollToBottom()
   },
-
-  scrollToBottom() {
-    const messagesBox = document.getElementById('messages')
-    setTimeout(() => {
-      messagesBox.scrollTop = messagesBox.scrollHeight;
-    }, 100)
-  }
 });
+
+const scrollToBottom = () => {
+  const messagesBox = document.getElementById('messages')
+  setTimeout(() => {
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }, 100)
+}
+
+document.addEventListener('turbo:load', () => {
+  scrollToBottom()
+})
